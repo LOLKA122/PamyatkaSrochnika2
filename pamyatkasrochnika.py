@@ -56,11 +56,37 @@ def general_info(message):
 def weapons_and_norms(message):
     img = open('kalash.jpg', 'rb')
     bot.send_photo(message.chat.id, img)
-    bot.send_message(message.chat.id, 'Инструкция по сборке АК-74:\n\n1. Открыть крышку ствольной коробки.\n2. Вынуть '
-                                      'возвратную пружину и ударник.\n3. Вынуть затворную группу.\n4. Установить '
-                                      'затворную группу обратно.\n5. Установить возвратную пружину и ударник.\n6. '
-                                      'Закрыть крышку ствольной коробки.\n7. Установить магазин.\n8. Включить '
-                                      'предохранитель.\n9. Готово.')
+    img = open('PM.jpg', 'rb')
+    bot.send_photo(message.chat.id, img)
+    img = open('RPK.jpg', 'rb')
+    bot.send_photo(message.chat.id, img)
+    bot.send_message(message.chat.id, 'Инструкция по сборке/разборке АК-74 (фото 1):\n\n1. Открыть крышку ствольной коробки.\n2. Вынуть'
+                                      'возвратную пружину и ударник.\n3. Вынуть затворную группу.\n4. Установить'
+                                      'затворную группу обратно.\n5. Установить возвратную пружину и ударник.\n6.'
+                                      'Закрыть крышку ствольной коробки.\n7. Установить магазин.\n8. Включить'
+                                      'предохранитель.\n9. Готово.\n\n'
+                                       'Инструкция по сборке/разборке ПМ (фото 2):\n\n1. Извлечь магазин из основания рукоятки.\n'
+                                       '2. Проверить, нет ли в патроннике патрона,' 
+                                       'отпустить затвор.\n3. Отделить затвор от рамки.\n4. Отвести затвор в крайнее заднее'
+                                      'положение и отделить затвор от рамки.\n5. Снять со ствола возвратную пружину.\n\n'
+                                      'Инструкция по сборке/разборке РПК (фото3): \n\n'
+                                      '1. Пулемет устанавливается на сошки.\n'
+                                        '2. Отделяется от пулемета магазин.\n'
+                                        '3. Отделяется шомпол.\n'
+                                        '4. Отделяется крышка ствольной коробки.\n'
+                                        '5. Отделяется возвратный механизм.\n'
+                                        '6. Отделяется затворная рама с затвором.\n'
+                                        '7. Отделяется затвор от затворной рамы.\n'
+                                        '8. Отделяется газовая трубка со ствольной накладкой.\n'
+                                        '9. Производится разборка магазина:\n'
+                                        '   а — отделение крышки магазина;\n'
+                                        '   б — отделение досылателя;\n'
+                                        '   в — отделение пружины подавателя;\n'
+                                        '   г — отделение снаряжательного рычага.\n'
+                                        '10. Разбирается возвратный механизм.\n'
+                                        '11. Разбирается затвор.\n'
+                                        '12. Разбирается ударно-спусковой механизм.\n'
+                                        '13. Отделяется цевье.')
 @bot.message_handler(func=lambda message: message.text == 'Физическая подготовка')
 def physical_training(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -72,11 +98,11 @@ def physical_training(message):
     bot.send_message(message.chat.id, 'Подтягивания: 5-7 (мужчины), 3-5 (женщины)')
     bot.send_message(message.chat.id, 'Бег на 100м: 12.5-13.5 сек (мужчины), 14.5-15.5 сек (женщины)')
     bot.send_message(message.chat.id, 'Бег на 1км: 4-5 минут (мужчины), 5-6 минут (женщины)')
-    bot.send_message(message.chat.id, 'Прыжок в длину: 5.5-6.5 м (мужчины), 4.5-5.5 м (женщины)')
+    bot.send_message(message.chat.id, 'Прыжок в длину(с разбега): 5.5-6.5 м (мужчины), 4.5-5.5 м (женщины)')
     bot.send_message(message.chat.id, 'Толкание ядра (16кг): 10-12 м (мужчины), 8-10 м (женщины)')
     bot.send_message(message.chat.id, 'Бег на 3000м: 12-15 минут (мужчины), 15-18 минут (женщины)')
 
-
+    norms={}
     @bot.message_handler(func=lambda message: message.text == 'Ввести данные')
     def input_data(message):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -91,11 +117,11 @@ def physical_training(message):
 
     def process_push_ups(message):
         push_ups_count = int(message.text)
-        # обрабатываем вводимые данные
+        norms[message.chat.id] = norms.get(message.chat.id, {})
+        norms[message.chat.id]['push_ups'] = push_ups_count
         bot.send_message(message.chat.id, f'Вы ввели {push_ups_count} отжиманий.')
-        # переход к следующему нормативу
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = ['Бег на 100м', 'Бег на 1км', 'Подтягивания','Прыжок в длину','Толкание ядра','Бег на 3000м','Назад']
+        buttons = ['Отжимания', 'Бег на 100м', 'Бег на 1км', 'Подтягивания','Прыжок в длину','Толкание ядра','Бег на 3000м','Назад']
         markup.add(*buttons)
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
@@ -106,11 +132,11 @@ def physical_training(message):
 
     def process_run100(message):
         run100_count = int(message.text)
-            # обрабатываем вводимые данные
-        bot.send_message(message.chat.id, f'Вы ввели {run100_count} секунд.')
-            # переход к следующему нормативу
+        norms[message.chat.id] = norms.get(message.chat.id, {})
+        norms[message.chat.id]['run100'] = run100_count
+        bot.send_message(message.chat.id, f'Вы ввели {run100_count} сек.')
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = ['Бег на 1км', 'Подтягивания','Прыжок в длину','Толкание ядра','Бег на 3000м','Назад']
+        buttons = ['Отжимания', 'Бег на 100м', 'Бег на 1км', 'Подтягивания','Прыжок в длину','Толкание ядра','Бег на 3000м','Назад']
         markup.add(*buttons)
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
@@ -118,13 +144,15 @@ def physical_training(message):
     def run1000(message):
         bot.send_message(message.chat.id, 'Введите время:')
         bot.register_next_step_handler(message, process_run1000)
+
     def process_run1000(message):
         run1000_count = int(message.text)
-        # обрабатываем вводимые данные
-        bot.send_message(message.chat.id, f'Вы ввели {run1000_count} минут.')
-        # переход к следующему нормативу
+        norms[message.chat.id] = norms.get(message.chat.id, {})
+        norms[message.chat.id]['run1000'] = run1000_count
+        bot.send_message(message.chat.id, f'Вы ввели {run1000_count} мин.')
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = ['Подтягивания', 'Прыжок в длину', 'Толкание ядра', 'Бег на 3000м','Назад']
+        buttons = ['Отжимания', 'Бег на 100м', 'Бег на 1км', 'Подтягивания', 'Прыжок в длину', 'Толкание ядра',
+                   'Бег на 3000м', 'Назад']
         markup.add(*buttons)
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
@@ -135,11 +163,11 @@ def physical_training(message):
 
     def process_pod(message):
         pod_count = int(message.text)
-        # обрабатываем вводимые данные
+        norms[message.chat.id] = norms.get(message.chat.id, {})
+        norms[message.chat.id]['pod'] = pod_count
         bot.send_message(message.chat.id, f'Вы ввели {pod_count} подтягиваний.')
-        # переход к следующему нормативу
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = ['Прыжок в длину', 'Толкание ядра', 'Бег на 3000м','Назад']
+        buttons = ['Отжимания', 'Бег на 100м', 'Бег на 1км', 'Подтягивания','Прыжок в длину','Толкание ядра','Бег на 3000м','Назад']
         markup.add(*buttons)
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
@@ -150,11 +178,11 @@ def physical_training(message):
 
     def process_jump(message):
         jump_count = int(message.text)
-        # обрабатываем вводимые данные
-        bot.send_message(message.chat.id, f'Вы ввели {jump_count} метров.')
-        # переход к следующему нормативу
+        norms[message.chat.id] = norms.get(message.chat.id, {})
+        norms[message.chat.id]['jump'] = jump_count
+        bot.send_message(message.chat.id, f'Вы ввели {jump_count} м.')
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = ['Толкание ядра', 'Бег на 3000м','Назад']
+        buttons = ['Отжимания', 'Бег на 100м', 'Бег на 1км', 'Подтягивания','Прыжок в длину','Толкание ядра','Бег на 3000м','Назад']
         markup.add(*buttons)
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
@@ -165,11 +193,12 @@ def physical_training(message):
 
     def process_shot_put(message):
         shot_put_count = int(message.text)
-        # обрабатываем вводимые данные
-        bot.send_message(message.chat.id, f'Вы ввели {shot_put_count} метров.')
-        # переход к следующему нормативу
+        norms[message.chat.id] = norms.get(message.chat.id, {})
+        norms[message.chat.id]['shot_put'] = shot_put_count
+        bot.send_message(message.chat.id, f'Вы ввели {shot_put_count} м.')
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = ['Бег на 3000м','Назад']
+        buttons = ['Отжимания', 'Бег на 100м', 'Бег на 1км', 'Подтягивания', 'Прыжок в длину', 'Толкание ядра',
+                   'Бег на 3000м', 'Назад']
         markup.add(*buttons)
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
     @bot.message_handler(func=lambda message: message.text == 'Бег на 3000м')
@@ -179,15 +208,30 @@ def physical_training(message):
 
     def process_run3000(message):
         run3000_count = int(message.text)
-        # обрабатываем вводимые данные
-        bot.send_message(message.chat.id, f'Вы ввели {run3000_count} минут.')
-        # переход к следующему нормативу
+        norms[message.chat.id] = norms.get(message.chat.id, {})
+        norms[message.chat.id]['run3000'] = run3000_count
+        bot.send_message(message.chat.id, f'Вы ввели {run3000_count} мин.')
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = ['Назад']
+        buttons = ['Посмотреть результаты', 'Назад']
         markup.add(*buttons)
-        bot.send_message(message.chat.id, 'Вы ввели все нормативы.', reply_markup=markup)
+        bot.send_message(message.chat.id, 'Вы ввели все нормативы, желаете ознакомиться с результатом?',
+                         reply_markup=markup)
 
-# Список вопросов и ответов
+    @bot.message_handler(func=lambda message: message.text == 'Посмотреть результаты')
+    def view_norms(message):
+        if message.chat.id in norms:
+            norms_message = 'Ваши нормативы:\n'
+            norms_message += f'Отжимания: {norms[message.chat.id].get("push_ups", "Не введено")}\n'
+            norms_message += f'Бег на 100м: {norms[message.chat.id].get("run100", "Не введено")}\n'
+            norms_message += f'Бег на 1км: {norms[message.chat.id].get("run1000", "Не введено")}\n'
+            norms_message += f'Подтягивания: {norms[message.chat.id].get("pod", "Не введено")}\n'
+            norms_message += f'Прыжок в длину: {norms[message.chat.id].get("jump", "Не введено")}\n'
+            norms_message += f'Толкание ядра: {norms[message.chat.id].get("shot_put", "Не введено")}\n'
+            norms_message += f'Бег на 3000м: {norms[message.chat.id].get("run3000", "Не введено")}'
+            bot.send_message(message.chat.id, norms_message)
+        else:
+            bot.send_message(message.chat.id, 'Вы не ввели нормативы.')
+
 questions = [
     {"question": "Какое звание имеет командир роты?", "answers": ["Капитан", "Майор", "Полковник"], "correct": 0},
     {"question": "Какое звание имеет командир батальона?", "answers": ["Майор", "Полковник", "Генерал-майор"],
