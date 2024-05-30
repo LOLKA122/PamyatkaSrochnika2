@@ -1,7 +1,8 @@
 import telebot
 from telebot import types, TeleBot
+from PIL import Image
 
-bot: TeleBot = telebot.TeleBot('6719262937:AAHNDEcqfTzzCj0NZpEzacUDqh_YdklOjCM')
+bot: TeleBot = telebot.TeleBot('7249612197:AAFcPMAaCJDjWNlXuzEth-zOXmmG6T2PfJg')
 
 
 @bot.message_handler(commands=['start'])
@@ -53,13 +54,13 @@ def general_info(message):
 
 @bot.message_handler(func=lambda message: message.text == 'Оружие и нормативы')
 def weapons_and_norms(message):
+    img = open('kalash.jpg', 'rb')
+    bot.send_photo(message.chat.id, img)
     bot.send_message(message.chat.id, 'Инструкция по сборке АК-74:\n\n1. Открыть крышку ствольной коробки.\n2. Вынуть '
                                       'возвратную пружину и ударник.\n3. Вынуть затворную группу.\n4. Установить '
                                       'затворную группу обратно.\n5. Установить возвратную пружину и ударник.\n6. '
                                       'Закрыть крышку ствольной коробки.\n7. Установить магазин.\n8. Включить '
                                       'предохранитель.\n9. Готово.')
-
-
 @bot.message_handler(func=lambda message: message.text == 'Физическая подготовка')
 def physical_training(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -99,7 +100,7 @@ def physical_training(message):
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
     @bot.message_handler(func=lambda message: message.text == 'Бег на 100м')
-    def run100(message,):
+    def run100(message):
         bot.send_message(message.chat.id, 'Введите время:')
         bot.register_next_step_handler(message, process_run100)
 
@@ -114,7 +115,7 @@ def physical_training(message):
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
     @bot.message_handler(func=lambda message: message.text == 'Бег на 1км')
-    def run1000(message, ):
+    def run1000(message):
         bot.send_message(message.chat.id, 'Введите время:')
         bot.register_next_step_handler(message, process_run1000)
     def process_run1000(message):
@@ -128,7 +129,7 @@ def physical_training(message):
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
     @bot.message_handler(func=lambda message: message.text == 'Подтягивания')
-    def pod(message, ):
+    def pod(message):
         bot.send_message(message.chat.id, 'Введите количество подтягиваний:')
         bot.register_next_step_handler(message, process_pod)
 
@@ -143,7 +144,7 @@ def physical_training(message):
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
     @bot.message_handler(func=lambda message: message.text == 'Прыжок в длину')
-    def jump(message, ):
+    def jump(message):
         bot.send_message(message.chat.id, 'Введите длину:')
         bot.register_next_step_handler(message, process_jump)
 
@@ -158,33 +159,33 @@ def physical_training(message):
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
 
     @bot.message_handler(func=lambda message: message.text == 'Толкание ядра')
-    def shot_put(message, ):
+    def shot_put(message):
         bot.send_message(message.chat.id, 'Введите длину:')
         bot.register_next_step_handler(message, process_shot_put)
 
     def process_shot_put(message):
         shot_put_count = int(message.text)
         # обрабатываем вводимые данные
-        bot.send_message(message.chat.id, f'Вы ввели {shot_put} метров.')
+        bot.send_message(message.chat.id, f'Вы ввели {shot_put_count} метров.')
         # переход к следующему нормативу
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = ['Бег на 3000м','Назад']
         markup.add(*buttons)
         bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
     @bot.message_handler(func=lambda message: message.text == 'Бег на 3000м')
-    def run3000(message, ):
+    def run3000(message):
         bot.send_message(message.chat.id, 'Введите время:')
         bot.register_next_step_handler(message, process_run3000)
 
     def process_run3000(message):
         run3000_count = int(message.text)
         # обрабатываем вводимые данные
-        bot.send_message(message.chat.id, f'Вы ввели {run3000} минут.')
+        bot.send_message(message.chat.id, f'Вы ввели {run3000_count} минут.')
         # переход к следующему нормативу
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = ['Назад']
         markup.add(*buttons)
-        bot.send_message(message.chat.id, 'Выберите следующий норматив:', reply_markup=markup)
+        bot.send_message(message.chat.id, 'Вы ввели все нормативы.', reply_markup=markup)
 
 # Список вопросов и ответов
 questions = [
